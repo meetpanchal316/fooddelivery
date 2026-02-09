@@ -40,6 +40,9 @@ pipeline {
     stage('Deploy to GKE') {
       steps {
         sh '''
+        gcloud auth activate-service-account --key-file="$GCP_KEY"
+        gcloud config set project totemic-life-473009-q3
+        
           kubectl set image deployment/restaurant-service-deployment \
             restaurant-service=$IMAGE_NAME:$BUILD_NUMBER
 
