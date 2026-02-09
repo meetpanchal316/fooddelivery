@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  # User Service
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    restart: always
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./user-service/.env
+    # networks:
+    #   - food-delivery-network
+
+  # Restaurant Service
+  restaurant-service:
+    build: ./restaurant-service
+    container_name: restaurant-service
+    restart: always
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./restaurant-service/.env
+    # networks:
+    #   - food-delivery-network
+
+  # Notification Service
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    restart: always
+    ports:
+      - "3004:3004"
+    env_file:
+      - ./notification-service/.env
+    # networks:
+    #   - food-delivery-network
+
+  # Order Service
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    restart: always
+    ports:
+      - "3003:3003"
+    env_file:
+      - ./order-service/.env
+    # environment:
+    #   # Override these for Docker container communication
+    #   RESTAURANT_SERVICE_URL: http://restaurant-service:3002
+    #   USER_SERVICE_URL: http://user-service:3001
+    depends_on:
+      - user-service
+      - restaurant-service
+    # networks:
+    #   - food-delivery-network
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./api-gateway/.env
+    # environment:
+    #   # Override these for Docker container communication
+    #   USER_SERVICE_URL: http://user-service:3001
+    #   RESTAURANT_SERVICE_URL: http://restaurant-service:3002
+    #   ORDER_SERVICE_URL: http://order-service:3003
+    #   NOTIFICATION_SERVICE_URL: http://notification-service:3004
+    depends_on:
+      - user-service
+      - restaurant-service
+      - order-service
+      - notification-service
+    # networks:
+    #   - food-delivery-network
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    # environment:
+    #   # CRITICAL: Browser needs localhost, not container name
+    #   VITE_API_GATEWAY_URL: http://localhost:3000
+    depends_on:
+      - api-gateway
+    # networks:
+    #   - food-delivery-network
+
+# networks:
+#   food-delivery-network:
+#     driver: bridge

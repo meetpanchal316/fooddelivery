@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant-service-deployment
+  labels:
+    app: restaurant-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurant-service
+  template:
+    metadata:
+      labels:
+        app: restaurant-service
+    spec:
+      containers:
+        - name: restaurant-service
+          image: panchalmeet/fooddelivery-restaurant-service:v4
+          ports:
+            - containerPort: 3002
+          envFrom:
+          - secretRef:
+              name: restaurant-service-secret

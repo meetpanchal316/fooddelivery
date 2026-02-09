@@ -1,0 +1,25 @@
+# Node deps
+node_modules
+
+# Build output (generated inside container)
+dist
+
+
+# Logs
+*.log
+
+# Git
+.git
+.gitignore
+
+# Editor configs
+.vscode
+.idea
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Docker files
+Dockerfile
+docker-compose.yml
