@@ -39,6 +39,7 @@ pipeline {
 
     stage('Deploy to GKE') {
       steps {
+     withCredentials([file(credentialsId: 'gcp-sa-key', variable: 'GCP_KEY')]) {
         sh '''
         gcloud auth activate-service-account --key-file="$GCP_KEY"
         gcloud config set project totemic-life-473009-q3 
@@ -48,6 +49,7 @@ pipeline {
 
           kubectl rollout status deployment/frontend-deployment
         '''
+     }
       }
     }
   }
